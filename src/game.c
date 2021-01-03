@@ -9,11 +9,9 @@
 #include "text_interface.h"
 
 uint8_t lifes;
-unsigned char lifes_buffer[2]; // for printing the score with padded numbers
 uint8_t level;
-unsigned char level_buffer[2]; // for printing the score with padded numbers
 uint16_t score;
-unsigned char score_buffer[6]; // for printing the score with padded numbers
+unsigned char info_buffer[6]; // for printing the score, lifes, levels with padded numbers
 uint8_t bullet_cooldown;
 uint8_t levelstart_cooldown;
 uint8_t in_game;
@@ -157,25 +155,25 @@ void update_score(uint16_t value) {
     
     score+=value;
 
-    pad_numbers(score_buffer, 6, score);
+    pad_numbers(info_buffer, 6, score);
     sp1_SetPrintPos(&game_score_area, 0, 0);
-    sp1_PrintString(&game_score_area, score_buffer);
+    sp1_PrintString(&game_score_area, info_buffer);
 }
 
 // Update the lifes text
 void update_lifes() {
     
-    pad_numbers(lifes_buffer, 2, lifes);
+    pad_numbers(info_buffer, 2, lifes);
     sp1_SetPrintPos(&game_lifes_area, 0, 0);
-    sp1_PrintString(&game_lifes_area, lifes_buffer);
+    sp1_PrintString(&game_lifes_area, info_buffer);
 }
 
 // Update the level text
 void update_level() {
     
-    pad_numbers(level_buffer, 2, level + 1);
+    pad_numbers(info_buffer, 2, level + 1);
     sp1_SetPrintPos(&game_level_area, 0, 0);
-    sp1_PrintString(&game_level_area, level_buffer);
+    sp1_PrintString(&game_level_area, info_buffer);
 }
 
 void restart_level() {
@@ -209,7 +207,7 @@ void play_game() {
     clear_message();
 
     while(in_game) {
-
+ 
         // get player input
         if (in_key_pressed( game_keys.left )) {
             // Left, move pad
@@ -247,21 +245,24 @@ void play_game() {
                     // Play sound?
 
                 } else {
-                    // DIE! Do the lost life stuff or end game if lifes = 0
+                    // Lost a life
+
                     lifes-=1;
                     update_lifes();
                     move_sprites_outside(); // animate pad perhaps?
-                    if(lifes > 0) {
-                        show_message(life_lost, 0, 4, 5);
+                    if(lifes > 0) { // just a life lost
+                        show_message(life_lost, 0, 3, 5);
                         clear_message();
+
                         restart_level();
+
                         levelstart_cooldown=255;
-                    } else {
+                    } else {    // DIE
                         show_message(game_over, 0, 6, 6);
                         in_game=0;
                         continue;
                     }
-                    
+
                 }
             }
             collision_ball_with_tile();
@@ -270,35 +271,38 @@ void play_game() {
                 if(collision_type == 1) { // tile destroyed
                     // Play sound?
                     update_score(5);
+                    sp1_UpdateNow();
+
+                    if(all_tiles_done() == 0) { // level completed!!
+
+                        level++;
+                        if(level == MAX_LEVELS) {
+                            // GANE WIN
+                            move_sprites_outside();
+                            update_score(1000);
+                            show_message(game_completed, 0, 1, 10);
+                            clear_message();
+                            in_game=0;
+                            continue;
+                        } else {
+                            levelstart_cooldown = 255;
+                            move_sprites_outside();
+                            update_score(50*level);
+                            show_message(level_completed, 0, 3, 5);
+                            clear_message();
+                            update_level();
+                            draw_level();
+                            restart_level();
+                            show_message(ready_text, 0, 7, 2);
+                            clear_message();
+                        }
+                    }
+
                 } else {
                     if(collision_type == 2) { // needs one more hit
                         // Play sound?
                     } else {    // indestructable
                         // Play sound?
-                    }
-                }
-
-                if(all_tiles_done() == 0) { // level completed!!
-
-                    level+=1;
-                    if(level + 1 > MAX_LEVELS) {
-                        // GANE WIN
-                        move_sprites_outside();
-                        update_score(1000);
-                        show_message(game_completed, 0, 2, 5);
-                        clear_message();
-                        in_game=0;
-                        continue;
-                    } else {
-                        move_sprites_outside();
-                        update_score(50*level);
-                        show_message(level_completed, 0, 3, 5);
-                        clear_message();
-                        update_level();
-                        draw_level();
-                        restart_level();
-                        show_message(ready_text, 0, 7, 2);
-                        clear_message();
                     }
                 }
                 

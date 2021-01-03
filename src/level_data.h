@@ -4,11 +4,6 @@
 unsigned char tile_color[9] = {INK_BLUE | BRIGHT, INK_RED | BRIGHT, INK_MAGENTA | BRIGHT, INK_GREEN | BRIGHT, INK_CYAN | BRIGHT, INK_YELLOW | BRIGHT, INK_WHITE | BRIGHT, INK_YELLOW, INK_WHITE};
 
 // level data
-// Colors: 
-// format: 
-// C - C: Color
-// if C = 8 it's indestructable and it's yellow
-// if c = 9 it takes 2 hits and it's white
 uint8_t level_data[MAX_LEVELS][MAX_LINES][MAX_COLS] = {
     {
 

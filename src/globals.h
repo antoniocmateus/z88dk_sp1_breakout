@@ -95,7 +95,7 @@ extern struct sprite_gfx pad_sprite;        // define the pad sprite
 #define MAX_TILES       132                 // Max tiles slots available
 #define MAX_COLS        11                  // Max cols for tiles positioning
 #define MAX_LINES       12                  // Max lines for tiles positioning
-#define MAX_LEVELS      2                   // How many levels we'll have
+#define MAX_LEVELS      2                   // How many levels we'll have.
 #define TILES_W         16                  // Tiles width
 #define TILES_H         8                   // Tiles height
 struct level_definition {                           // defines a level
