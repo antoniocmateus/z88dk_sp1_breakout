@@ -18,7 +18,6 @@ uint8_t bullet_cooldown;
 uint8_t levelstart_cooldown;
 uint8_t in_game;
 struct level_definition current_level;
-uint8_t collision_with_tile;
 unsigned char key_pressed;
 
 // Load level sprites
@@ -48,14 +47,13 @@ void init_gameplay() {
     bullet_cooldown = 255;
     levelstart_cooldown = 255;
     in_game = 1;
-    collision_with_tile=0;
 }
 
 // draw the current level
 void draw_level() {
 
     // Clear the game area
-    sp1_Invalidate(&game_area);
+    sp1_ClearRectInv(&game_area, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
     sp1_UpdateNow();
 
     uint8_t t;                                      // the tile number being read
@@ -133,22 +131,25 @@ void position_sprites() {
 void pause_game() {
 
     // show text
-    sp1_SetPrintPos(&game_text_area, 0, 5);
-    sp1_PrintString(&game_text_area, paused_text);
-    sp1_UpdateNow();
-    in_wait_nokey();
-    in_wait_key();
-    in_wait_nokey();
-
+    show_message(paused_text, 0, 5, 0);
+    
     // clear text
-    sp1_ClearRectInv(&game_text_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
-    sp1_UpdateNow();
+    clear_message();
 }
 
 // request confirmation and abort the game if the player wants to
 void abort_game() {
 
-    
+    // show Ready...?
+    show_message(quit_text, 0, 5, 1);
+    in_wait_key();
+    key_pressed = in_inkey();
+    in_wait_nokey();
+    if(key_pressed == 'y') {
+        in_game = 0;
+    }
+    // clear Ready...?
+    clear_message();
 }
 
 // Upadte the score text
@@ -177,6 +178,14 @@ void update_level() {
     sp1_PrintString(&game_level_area, level_buffer);
 }
 
+void restart_level() {
+
+    position_sprites();
+
+    update_pad();
+    update_ball();
+}
+
 // Play the game
 void play_game() {
 
@@ -184,10 +193,7 @@ void play_game() {
 
     draw_level();
 
-    position_sprites();
-
-    update_pad();
-    update_ball();
+    restart_level();
     
     // write initial text information
     update_score(score);
@@ -198,13 +204,9 @@ void play_game() {
     sp1_UpdateNow();
     
     // show Ready...?
-    sp1_SetPrintPos(&game_text_area, 0, 7);
-    sp1_PrintString(&game_text_area, ready_text);
-    sp1_UpdateNow();
-    wait_seconds(2);
+    show_message(ready_text, 0, 7, 2);
     // clear Ready...?
-    sp1_ClearRectInv(&game_text_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
-    sp1_UpdateNow();
+    clear_message();
 
     while(in_game) {
 
@@ -221,12 +223,9 @@ void play_game() {
         }
         if(in_key_pressed( game_keys.fire )) {
             // Fire
-            
         }
         if(in_key_pressed( game_keys.pause )) pause_game(); // Pause the gamme
-        if(in_key_pressed( game_keys.abort )) { // Abort the game
-            
-        } 
+        if(in_key_pressed( game_keys.abort )) abort_game(); // Abort the game
             
         if (levelstart_cooldown == 0) {
             // we're in action
@@ -235,39 +234,77 @@ void play_game() {
             move_ball();
 
             // Check for ball collisions
-            if(collision_ball_with_pad()==1) {
-                // collision with pad
-            }
-            if(collision_ball_with_screen() == 1) {
-                // collision with screen
-            }
-            collision_with_tile = collision_ball_with_tile();
-            if(collision_with_tile > 0) {
+            collision_ball_with_pad();
+            if(collision_type > 0) {
 
-                if(collision_with_tile == 1) { // tile destroyed
+                // Play sound
 
-                    update_score(1);
+            }
+            collision_ball_with_screen();
+            if(collision_type > 0) {
+
+                if(collision_type == 1) { // tile destroyed
+                    // Play sound?
+
                 } else {
-                    if(collision_with_tile == 2) { // needs one more hit
+                    // DIE! Do the lost life stuff or end game if lifes = 0
+                    lifes-=1;
+                    update_lifes();
+                    move_sprites_outside(); // animate pad perhaps?
+                    if(lifes > 0) {
+                        show_message(life_lost, 0, 4, 5);
+                        clear_message();
+                        restart_level();
+                        levelstart_cooldown=255;
+                    } else {
+                        show_message(game_over, 0, 6, 6);
+                        in_game=0;
+                        continue;
+                    }
+                    
+                }
+            }
+            collision_ball_with_tile();
+            if(collision_type > 0) {
 
+                if(collision_type == 1) { // tile destroyed
+                    // Play sound?
+                    update_score(5);
+                } else {
+                    if(collision_type == 2) { // needs one more hit
+                        // Play sound?
                     } else {    // indestructable
+                        // Play sound?
+                    }
+                }
 
+                if(all_tiles_done() == 0) { // level completed!!
+
+                    level+=1;
+                    if(level + 1 > MAX_LEVELS) {
+                        // GANE WIN
+                        move_sprites_outside();
+                        update_score(1000);
+                        show_message(game_completed, 0, 2, 5);
+                        clear_message();
+                        in_game=0;
+                        continue;
+                    } else {
+                        move_sprites_outside();
+                        update_score(50*level);
+                        show_message(level_completed, 0, 3, 5);
+                        clear_message();
+                        update_level();
+                        draw_level();
+                        restart_level();
+                        show_message(ready_text, 0, 7, 2);
+                        clear_message();
                     }
                 }
                 
             }
 
-            // if(collision_ball_die()==1) { // lost a life
-
-            // }
-
             update_ball();
-
-            // Check for death condition
-                // check for ball hitting down
-            
-            // check for winning condition
-                // check for no more tiles
 
         } else {
             // in start of level cooldown (overrided by fire)
@@ -285,8 +322,7 @@ void play_game() {
     }
 
     // Move sprites outside screen
-    sp1_MoveSprPix(pad_sprite.s, &game_area, 0, 0, 0);
-    sp1_MoveSprPix(ball_sprite.s, &game_area, 0, 0, 0);
+    move_sprites_outside();
 
     // get back to the menu
 }

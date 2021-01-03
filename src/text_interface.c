@@ -1,7 +1,9 @@
 #include <arch/zx.h>
 #include <arch/zx/sp1.h>
+#include <input.h>
 #include "globals.h"
 #include "text_interface.h"
+#include "int.h"
 
 struct sp1_Rect game_text_rect = {17, 1, 22, 1}; // Y, X, W, H
 struct sp1_pss game_text_area;
@@ -13,9 +15,13 @@ struct sp1_Rect game_level_rect = {19,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_level_area;
 
 // Text
-unsigned char ready_text[] = "READY...?";
-unsigned char paused_text[] = "GAME PAUSED!";
-unsigned char quit_text[] = "QUIT? Y OR N.";
+unsigned char ready_text[]      = "READY...?";
+unsigned char paused_text[]     = "GAME PAUSED!";
+unsigned char quit_text[]       = "QUIT? Y OR N.";
+unsigned char life_lost[]       = "YOU LOST A LIFE!";
+unsigned char game_over[]       = "GAME OVER!";
+unsigned char level_completed[] = "LEVEL COMPLETED!";
+unsigned char game_completed[]  = "YOU WIN!!! CONGRATS!";
 
 // Initialize fonts and text areas
 void init_text() {
@@ -70,4 +76,25 @@ void pad_numbers(unsigned char *s, unsigned int limit, long number)
       *--s = (number % 10) + '0';
       number /= 10;
    }
+}
+
+void show_message(unsigned char *s, uint16_t row, uint16_t col, int delay) {
+
+  sp1_SetPrintPos(&game_text_area, row, col);
+  sp1_PrintString(&game_text_area, s);
+  sp1_UpdateNow();
+
+  if(delay > 0) {
+    wait_seconds(2);
+  } else {
+    in_wait_nokey();
+    in_wait_key();
+    in_wait_nokey();
+  }
+}
+
+void clear_message() {
+
+  sp1_ClearRectInv(&game_text_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
+  sp1_UpdateNow();
 }

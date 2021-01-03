@@ -14,7 +14,6 @@ extern struct sp1_pss game_lifes_area;
 extern struct sp1_Rect game_level_rect;
 extern struct sp1_pss game_level_area;
 
-
 // INPUT
 struct keys_struct {                      // structure to hold the input keys
 
@@ -40,11 +39,9 @@ extern uint8_t level;                       // hold the current level
 extern uint16_t score;                      // score
 extern uint8_t bullet_cooldown;            // cooldown for the shooting
 extern uint8_t levelstart_cooldown;         // cooldown for level start
-extern uint8_t has_collision;
 extern uint8_t has_v_collision;
 extern uint8_t collision_type;
 extern uint8_t i;
-extern uint8_t collision_with_tile;
 extern unsigned char key_pressed;
 
 struct point {                              // defines a point in the screen (can be pixel coord or character coord)

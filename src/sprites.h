@@ -9,9 +9,10 @@ extern void position_sprites_init();
 extern void create_ball();
 extern void update_ball();
 extern void move_ball();
-extern uint8_t collision_ball_with_pad();
-extern uint8_t collision_ball_with_screen();
-extern uint8_t collision_ball_with_tile();
-// extern uint8_t collision_ball_die();
+extern void collision_ball_with_pad();
+extern void collision_ball_with_screen();
+extern void collision_ball_with_tile();
+extern void move_sprites_outside();
+extern uint8_t all_tiles_done();
 
 #endif

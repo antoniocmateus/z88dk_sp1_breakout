@@ -8,7 +8,7 @@
 #include "text_interface.h"
 
 // variables initialization
-struct sp1_Rect game_area = {1, 1, 22, 24}; // define game area (x,y,w,h)
+struct sp1_Rect game_area = {1, 1, 22, 23}; // define game area (x,y,w,h)
 struct keys_struct game_keys = {IN_KEY_SCANCODE_z, IN_KEY_SCANCODE_m, IN_KEY_SCANCODE_l, IN_KEY_SCANCODE_q, IN_KEY_SCANCODE_h}; // define the default keys
 
 uint8_t i;
@@ -26,7 +26,8 @@ int main()
                    INK_WHITE | PAPER_BLACK, ' ' );
     
     //Invalidate the game area to force sp1 to redraw next update
-    sp1_Invalidate(&game_area); 
+    sp1_Invalidate(&game_area);
+    sp1_UpdateNow();
 
     // initialize the font and text areas
     init_text();

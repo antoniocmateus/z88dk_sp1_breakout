@@ -6,7 +6,6 @@
 struct sprite_gfx pad_sprite;
 struct sprite_gfx ball_sprite;
 
-uint8_t has_collision;
 uint8_t has_v_collision;
 uint8_t collision_type;
 
@@ -58,7 +57,7 @@ void position_sprites_init() {
     pad_sprite.pos.y = PAD_START_POS_Y;
 
     // reset the ball
-    ball_sprite.vel.x = 2;
+    ball_sprite.vel.x = 1;
     ball_sprite.vel.y = 3;
     ball_sprite.dir.dh = 0;
     ball_sprite.dir.dv = 0;
@@ -82,7 +81,7 @@ void move_ball() {
     }
 }
 
-uint8_t update_tile_hit(uint8_t tile_index) {
+void update_tile_hit(uint8_t tile_index) {
 
     collision_type = 1;
 
@@ -93,8 +92,13 @@ uint8_t update_tile_hit(uint8_t tile_index) {
     } else {
         collision_type = 2;
     }
-    
-    return collision_type;
+}
+
+void move_sprites_outside() {
+
+    sp1_MoveSprPix(pad_sprite.s, &game_area, 0, 0, 0);
+    sp1_MoveSprPix(ball_sprite.s, &game_area, 0, 0, 0);
+    sp1_UpdateNow();
 }
 
 // check if pad collides with creen limits
@@ -110,57 +114,41 @@ void collision_pad_with_screen() {
 }
 
 // check if ball collides with screen limits
-uint8_t collision_ball_with_screen() {
+void collision_ball_with_screen() {
     
-    has_collision = 0;
+    collision_type = 0;
 
     if (ball_sprite.pos.x < MAX_SCR_LEFT) {                                     // collided with left side
         ball_sprite.pos.x = MAX_SCR_LEFT;                                       // reposition ball
         ball_sprite.dir.dh = 0;                                                 // flag the new direction
-        has_collision = 1;
+        collision_type = 1;
     } else {
         if (ball_sprite.pos.x + ball_sprite.dim.w > MAX_SCR_RIGHT) {
             ball_sprite.pos.x = MAX_SCR_RIGHT - ball_sprite.dim.w;
             ball_sprite.dir.dh = 1;
-            has_collision = 1;
+            collision_type = 1;
         }
     }
     if (ball_sprite.pos.y < MAX_SCR_TOP) {
         ball_sprite.pos.y=MAX_SCR_TOP;
         ball_sprite.dir.dv = 1;
-        has_collision = 1;
+        collision_type = 1;
     } else {
 
-        // TO DELETE. IF BALL HITS BOTTOM IT SHOULD BE HANDLED BY collision_ball_die() OR EQUIVALENT
         if (ball_sprite.pos.y + ball_sprite.dim.h > MAX_SCR_BOTTOM) {
             ball_sprite.pos.y = MAX_SCR_BOTTOM - ball_sprite.dim.h;
             ball_sprite.dir.dv = 0;
-            has_collision = 1;
+            collision_type = 2; // die
         }
 
     }
 
-    return has_collision;
 }
 
-// uint8_t collision_ball_die() {
-
-//     has_collision = 0;
-
-//     if (ball_sprite.pos.y + ball_sprite.dim.h > MAX_SCR_BOTTOM) {
-//         ball_sprite.pos.y = MAX_SCR_BOTTOM - ball_sprite.dim.h;
-//         ball_sprite.dir.dv = 0;
-//         has_collision = 1;
-//     }
-
-//     return has_collision;
-
-// }
-
 // check if the ball collided with the pad
-uint8_t collision_ball_with_pad() {
+void collision_ball_with_pad() {
 
-    has_collision = 0;
+    collision_type = 0;
 
     if(ball_sprite.pos.y > PAD_START_POS_Y - ball_sprite.dim.h) {           // if the ball is at pad Y then we check for collision else skip it
 
@@ -169,21 +157,21 @@ uint8_t collision_ball_with_pad() {
             pad_sprite.pos.y < ball_sprite.pos.y + ball_sprite.dim.h &&
             pad_sprite.pos.y + pad_sprite.dim.h > ball_sprite.pos.y) {
 
-            has_collision = 1;
+            collision_type = 1;
 
             // Top OR Bottom contact
             if(ball_sprite.pos.y + ball_sprite.dim.h > pad_sprite.pos.y && ball_sprite.pos.y < pad_sprite.pos.y && ball_sprite.dir.dv == 1) {       // contact at the top
 
                 ball_sprite.dir.dv = 0;
                 ball_sprite.pos.y -=2;
-            } else {
+            } //else {
 
-                if(ball_sprite.pos.y < pad_sprite.pos.y + pad_sprite.dim.h && ball_sprite.pos.y > pad_sprite.pos.y && ball_sprite.dir.dv == 0) {    // FOR DEBUG PURPOSES. THIS IS ELIMINATE, AS HITTING THE PAD BOTTOM SHOULDN'T HAPPEN
+                // if(ball_sprite.pos.y < pad_sprite.pos.y + pad_sprite.dim.h && ball_sprite.pos.y > pad_sprite.pos.y && ball_sprite.dir.dv == 0) {    // FOR DEBUG PURPOSES. THIS IS ELIMINATE, AS HITTING THE PAD BOTTOM SHOULDN'T HAPPEN
 
-                    ball_sprite.dir.dv = 1;
-                    ball_sprite.pos.y += 2;
-                }
-            }
+                //     ball_sprite.dir.dv = 1;
+                //     ball_sprite.pos.y += 2;
+                // }
+            //}
 
             // Left OR Right contact
             if(ball_sprite.pos.x + ball_sprite.dim.w > pad_sprite.pos.x + pad_sprite.dim.w && ball_sprite.pos.y + ball_sprite.dim.h > pad_sprite.pos.y && ball_sprite.dir.dh == 1) {
@@ -201,18 +189,16 @@ uint8_t collision_ball_with_pad() {
 
     }
 
-    return has_collision;
-
 }
 
-uint8_t collision_ball_with_tile() {
+void collision_ball_with_tile() {
 
-    has_collision = 0;
+    collision_type = 0;
     has_v_collision = 0;
 
     for (i = 0; i < current_level.total_tiles; i++)
     {
-        if(current_level.tiles[i].hit == 0) continue;
+        if(current_level.tiles[i].hit == 0 && current_level.tiles[i].type < 3) continue;
 
         if(current_level.tiles[i].pixel_pos.x < ball_sprite.pos.x + ball_sprite.dim.w &&
             current_level.tiles[i].pixel_pos.x + TILES_W > ball_sprite.pos.x &&
@@ -220,9 +206,9 @@ uint8_t collision_ball_with_tile() {
             current_level.tiles[i].pixel_pos.y + TILES_H > ball_sprite.pos.y) {
 
             if(current_level.tiles[i].type == 3) { // indestructable
-                has_collision = 3;
+                collision_type = 3;
             } else {
-                has_collision = update_tile_hit(i);
+                update_tile_hit(i);
             }
 
             if(ball_sprite.pos.y < current_level.tiles[i].pixel_pos.y + TILES_H && ball_sprite.pos.y > current_level.tiles[i].pixel_pos.y && ball_sprite.dir.dv == 0) { // ball hit the bottom of the tile
@@ -253,7 +239,20 @@ uint8_t collision_ball_with_tile() {
 
         }
     }
-    
+}
 
-    return has_collision;
+uint8_t all_tiles_done() {
+
+
+    uint8_t hit = 0;
+
+    for (i = 0; i < current_level.total_tiles; i++)
+    {
+        if(current_level.tiles[i].hit > 0) {
+            hit = 1;
+            break;
+        }
+    }
+
+    return hit;
 }
