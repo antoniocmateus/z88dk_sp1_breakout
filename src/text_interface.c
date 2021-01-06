@@ -7,11 +7,11 @@
 
 struct sp1_Rect game_text_rect = {17, 1, 22, 1}; // Y, X, W, H
 struct sp1_pss game_text_area;
-struct sp1_Rect game_score_rect = {15,  25, 6, 1}; // Y, X, W, H
+struct sp1_Rect game_score_rect = {13,  25, 6, 1}; // Y, X, W, H
 struct sp1_pss game_score_area;
 struct sp1_Rect game_lifes_rect = {17,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_lifes_area;
-struct sp1_Rect game_level_rect = {19,  27, 2, 1}; // Y, X, W, H
+struct sp1_Rect game_level_rect = {21,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_level_area;
 
 // Text
