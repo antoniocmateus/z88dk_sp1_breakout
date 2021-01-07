@@ -9,7 +9,7 @@ extern void position_sprites_init();
 extern void create_ball();
 extern void update_ball();
 extern void move_ball();
-extern void collision_ball_with_pad();
+extern void collision_ball_with_pad(int left, int right);
 extern void collision_ball_with_screen();
 extern void collision_ball_with_tile();
 extern void move_sprites_outside();

@@ -8,6 +8,14 @@
 #include "sprites.h"
 #include "text_interface.h"
 
+// bonus
+// bullets
+// sounds
+// animations (tiles, pad?)
+// enemies
+// hi-score
+
+
 uint8_t lifes;
 uint8_t level;
 uint16_t score;
@@ -42,7 +50,7 @@ void init_gameplay() {
     lifes = 4;
     level = 0;
     score = 0;
-    bullet_cooldown = 255;
+    bullet_cooldown = 0;
     levelstart_cooldown = 255;
     in_game = 1;
 }
@@ -221,6 +229,7 @@ void play_game() {
         }
         if(in_key_pressed( game_keys.fire )) {
             // Fire
+            
         }
         if(in_key_pressed( game_keys.pause )) pause_game(); // Pause the gamme
         if(in_key_pressed( game_keys.abort )) abort_game(); // Abort the game
@@ -232,18 +241,16 @@ void play_game() {
             move_ball();
 
             // Check for ball collisions
-            collision_ball_with_pad();
+            collision_ball_with_pad(in_key_pressed( game_keys.left ), in_key_pressed( game_keys.right ));
             if(collision_type > 0) {
-
-                // Play sound
 
             }
             collision_ball_with_screen();
             if(collision_type > 0) {
 
-                if(collision_type == 1) { // tile destroyed
+                if(collision_type == 1) {
                     // Play sound?
-
+                    
                 } else {
                     // Lost a life
 

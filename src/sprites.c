@@ -146,7 +146,7 @@ void collision_ball_with_screen() {
 }
 
 // check if the ball collided with the pad
-void collision_ball_with_pad() {
+void collision_ball_with_pad(int left, int right) {
 
     collision_type = 0;
 
@@ -164,6 +164,44 @@ void collision_ball_with_pad() {
 
                 ball_sprite.dir.dv = 0;
                 ball_sprite.pos.y -=2;
+
+                if(left || right) {
+                    ball_sprite.vel.x = 1;
+                    ball_sprite.vel.y = 3;
+                    if(ball_sprite.dir.dh == 0 && right) {
+                        ball_sprite.dir.dh = 1;
+                    } else {
+                        if(ball_sprite.dir.dh == 1 && left) {
+                            ball_sprite.dir.dh = 0;
+                        }
+                    }
+                } else {
+                    if(ball_sprite.pos.x + ball_sprite.dim.w < pad_sprite.pos.x + 8) {
+                            if (ball_sprite.dir.dh == 1) {
+                                ball_sprite.vel.x+=1;
+                                ball_sprite.vel.y-=1;
+                            } else {
+                                ball_sprite.vel.x-=1;
+                                ball_sprite.vel.y+=1;
+                            }
+                    } else {
+                        if(ball_sprite.pos.x>pad_sprite.pos.x + 16) {
+                            if (ball_sprite.dir.dh == 0) {
+                                ball_sprite.vel.x+=1;
+                                ball_sprite.vel.y-=1;
+                            } else {
+                                ball_sprite.vel.x-=1;
+                                ball_sprite.vel.y+=1;
+                            }
+                        }
+                    }
+
+                }
+                if(ball_sprite.vel.x == 0) ball_sprite.vel.x = 1;
+                if(ball_sprite.vel.y == 0) ball_sprite.vel.y = 1;
+                if(ball_sprite.vel.x == 4 ) ball_sprite.vel.x = 3;
+                if(ball_sprite.vel.y == 4 ) ball_sprite.vel.y = 3;
+
             } //else {
 
                 // if(ball_sprite.pos.y < pad_sprite.pos.y + pad_sprite.dim.h && ball_sprite.pos.y > pad_sprite.pos.y && ball_sprite.dir.dv == 0) {    // FOR DEBUG PURPOSES. THIS IS ELIMINATE, AS HITTING THE PAD BOTTOM SHOULDN'T HAPPEN
