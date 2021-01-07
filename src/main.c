@@ -54,9 +54,6 @@ int main()
         
         // show text
         show_message("MENU", 0, 9, 0);
-        
-        // clear text
-        clear_message();
         play_game();
 
     }

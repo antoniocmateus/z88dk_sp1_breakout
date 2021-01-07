@@ -89,12 +89,11 @@ void show_message(unsigned char *s, uint16_t row, uint16_t col, int delay) {
   } else {
     in_wait_nokey();
     in_wait_key();
+    key_pressed = in_inkey();
     in_wait_nokey();
   }
-}
-
-void clear_message() {
 
   sp1_ClearRectInv(&game_text_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
   sp1_UpdateNow();
+
 }
