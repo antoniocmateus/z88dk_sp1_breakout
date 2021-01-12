@@ -12,5 +12,6 @@ extern unsigned char game_completed[];
 extern void init_text();
 extern void pad_numbers(unsigned char *s, unsigned int limit, long number);
 extern void show_message(unsigned char *s, uint16_t row, uint16_t col, int delay);
+extern void show_menu();
 
 #endif

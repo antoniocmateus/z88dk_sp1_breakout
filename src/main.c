@@ -38,22 +38,13 @@ int main()
     // generate a new seed with tick (tick will run 50 per second)
     srand(tick);
 
+
     // Lets go to the main loop
     while (1) {
 
-        // clear screen
-        sp1_ClearRectInv(&game_area, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
-        sp1_UpdateNow();
+       // show menu
+        show_menu();
 
-        // Show Menu
-        // Show Hi-score
-        // Redefine keys        
-
-        // Show Intro
-        // Play the game
-        
-        // show text
-        show_message("MENU", 0, 9, 0);
         play_game();
 
     }

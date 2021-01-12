@@ -13,6 +13,8 @@ extern struct sp1_Rect game_lifes_rect;
 extern struct sp1_pss game_lifes_area;
 extern struct sp1_Rect game_level_rect;
 extern struct sp1_pss game_level_area;
+extern struct sp1_Rect game_menu_rect;
+extern struct sp1_pss game_menu_area;
 
 // INPUT
 struct keys_struct {                      // structure to hold the input keys

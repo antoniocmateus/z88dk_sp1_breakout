@@ -13,6 +13,8 @@ struct sp1_Rect game_lifes_rect = {17,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_lifes_area;
 struct sp1_Rect game_level_rect = {21,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_level_area;
+struct sp1_Rect game_menu_rect = {1,  1, 22, 22}; // Y, X, W, H
+struct sp1_pss game_menu_area;
 
 // Text
 unsigned char ready_text[]      = "READY...?";
@@ -60,6 +62,12 @@ void init_text() {
     game_level_area.attr_mask = 0;                          // overwrite background colour
     game_level_area.attr      = INK_WHITE | PAPER_BLACK;
     game_level_area.visit     = 0;
+
+    game_menu_area.bounds    = &game_menu_rect;            // print window
+    game_menu_area.flags     = SP1_PSSFLAG_INVALIDATE;     // printed characters invalidated so that they are drawn in the next sp1_UpdateNow
+    game_menu_area.attr_mask = 0;                          // overwrite background colour
+    game_menu_area.attr      = INK_WHITE | PAPER_BLACK;
+    game_menu_area.visit     = 0;
 }
 
 void pad_numbers(unsigned char *s, unsigned int limit, long number)
@@ -95,5 +103,37 @@ void show_message(unsigned char *s, uint16_t row, uint16_t col, int delay) {
 
   sp1_ClearRectInv(&game_text_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
   sp1_UpdateNow();
+
+}
+
+void show_menu() {
+
+  sp1_ClearRectInv(&game_menu_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
+
+  sp1_SetPrintPos(&game_menu_area, 1, 5);
+  sp1_PrintString(&game_menu_area, "\x14\x47" "Z88DK BREAKOUT");
+
+  sp1_SetPrintPos(&game_menu_area, 4, 0);
+  sp1_PrintString(&game_menu_area, "\x14\x46" "CODE, GRAPHICS & SOUND");
+
+  sp1_SetPrintPos(&game_menu_area, 6, 4);
+  sp1_PrintString(&game_menu_area, "\x14\x03" "ANTONIO MATEUS");
+  sp1_SetPrintPos(&game_menu_area, 8, 0);
+  sp1_PrintString(&game_menu_area, "\x14\x47" "GITHUB/ANTONIOCMATEUS");
+
+  sp1_SetPrintPos(&game_menu_area, 11, 0);
+  sp1_PrintString(&game_menu_area, "FEEL FREE TO  USE THIS");
+  sp1_SetPrintPos(&game_menu_area, 12, 1);
+  sp1_PrintString(&game_menu_area, "PROGRAM AS  YOU WANT");
+  sp1_SetPrintPos(&game_menu_area, 15, 4);
+  sp1_PrintString(&game_menu_area, "\x14\x47" "WWW.Z88DK.ORG");
+
+  sp1_SetPrintPos(&game_menu_area, 20, 4);
+  sp1_PrintString(&game_menu_area, "\x14\x47" "PRESS ANY KEY!");
+  sp1_UpdateNow();
+
+  in_wait_nokey();
+  in_wait_key();
+  in_wait_nokey();
 
 }

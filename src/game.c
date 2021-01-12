@@ -2,6 +2,7 @@
 #include <arch/zx/sp1.h>
 #include <input.h>
 #include <stdlib.h>
+#include <sound.h>
 #include "int.h"
 #include "globals.h"
 #include "level_data.h"
@@ -248,9 +249,6 @@ void play_game() {
  
         // get player input
         get_player_movement();
-        if(in_key_pressed( game_keys.fire )) {
-            // Fire
-        }
         if(in_key_pressed( game_keys.pause )) pause_game(); // Pause the gamme
         if(in_key_pressed( game_keys.abort )) abort_game(); // Abort the game
 
@@ -261,13 +259,15 @@ void play_game() {
         collision_ball_with_pad(in_key_pressed( game_keys.left ), in_key_pressed( game_keys.right ));
         if(collision_type > 0) {
 
+            bit_beep(20, 100);
         }
         collision_ball_with_screen();
         if(collision_type > 0) {
 
             if(collision_type == 1) {
                 // Play sound?
-                
+
+                bit_beep(20, 100);
             } else {
                 // Lost a life
 
@@ -295,6 +295,8 @@ void play_game() {
 
             if(collision_type == 1) { // tile destroyed
                 // Play sound?
+                bit_beep(20, 50);
+
                 update_score(5);
                 sp1_UpdateNow();
 
@@ -324,8 +326,11 @@ void play_game() {
             } else {
                 if(collision_type == 2) { // needs one more hit
                     // Play sound?
+
+                    bit_beep(20, 200);
                 } else {    // indestructable
                     // Play sound?
+                    bit_beep(20, 255);
                 }
             }
             
