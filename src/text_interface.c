@@ -110,7 +110,7 @@ void show_menu() {
 
   sp1_ClearRectInv(&game_menu_rect, INK_WHITE | PAPER_BLACK, ' ', SP1_RFLAG_TILE | SP1_RFLAG_COLOUR);
 
-  sp1_SetPrintPos(&game_menu_area, 1, 5);
+  sp1_SetPrintPos(&game_menu_area, 1, 4);
   sp1_PrintString(&game_menu_area, "\x14\x47" "Z88DK BREAKOUT");
 
   sp1_SetPrintPos(&game_menu_area, 4, 0);
@@ -128,6 +128,8 @@ void show_menu() {
   sp1_SetPrintPos(&game_menu_area, 15, 4);
   sp1_PrintString(&game_menu_area, "\x14\x47" "WWW.Z88DK.ORG");
 
+  sp1_SetPrintPos(&game_menu_area, 18, 3);
+  sp1_PrintString(&game_menu_area, "\x14\x47" "LEFT:Z   RIGHT:M");
   sp1_SetPrintPos(&game_menu_area, 20, 4);
   sp1_PrintString(&game_menu_area, "\x14\x47" "PRESS ANY KEY!");
   sp1_UpdateNow();

@@ -21,6 +21,9 @@ int main()
     // setup IM2
     setup_int();
 
+    // hold on so the player can see the screen
+    wait_seconds(5);
+
     // Initialize SP1
     sp1_Initialize(SP1_IFLAG_MAKE_ROTTBL | SP1_IFLAG_OVERWRITE_TILES | SP1_IFLAG_OVERWRITE_DFILE,
                    INK_WHITE | PAPER_BLACK, ' ' );

@@ -5,8 +5,9 @@ utils\bas2tap -a10 -sz88break src\loader.bas deploy\loader.tap
 cd deploy
 ren z88dk-breakout.map z88dk-breakout_CODE.map
 z88dk-appmake +zx -b z88dk-breakout_CODE.bin -o game.tap --blockname z88dk-breakout --org 25124 --noloader
-copy /b loader.tap + loading.tap + game.tap z88dk-breakout.tap
+copy /b loader.tap + ..\gfx\loading.tap + game.tap z88dk-breakout.tap
 del game.tap
+del loading.tap
 del loader.tap
 del z88dk-breakout_*
 cd ..
