@@ -9,8 +9,8 @@ struct sp1_Rect game_text_rect = {17, 1, 22, 1}; // Y, X, W, H
 struct sp1_pss game_text_area;
 struct sp1_Rect game_score_rect = {13,  25, 6, 1}; // Y, X, W, H
 struct sp1_pss game_score_area;
-struct sp1_Rect game_lifes_rect = {17,  27, 2, 1}; // Y, X, W, H
-struct sp1_pss game_lifes_area;
+struct sp1_Rect game_lives_rect = {17,  27, 2, 1}; // Y, X, W, H
+struct sp1_pss game_lives_area;
 struct sp1_Rect game_level_rect = {21,  27, 2, 1}; // Y, X, W, H
 struct sp1_pss game_level_area;
 struct sp1_Rect game_menu_rect = {1,  1, 22, 22}; // Y, X, W, H
@@ -51,11 +51,11 @@ void init_text() {
     game_score_area.attr      = INK_WHITE | PAPER_BLACK;
     game_score_area.visit     = 0;
 
-    game_lifes_area.bounds    = &game_lifes_rect;            // print window
-    game_lifes_area.flags     = SP1_PSSFLAG_INVALIDATE;     // printed characters invalidated so that they are drawn in the next sp1_UpdateNow
-    game_lifes_area.attr_mask = 0;                          // overwrite background colour
-    game_lifes_area.attr      = INK_WHITE | PAPER_BLACK;
-    game_lifes_area.visit     = 0;
+    game_lives_area.bounds    = &game_lives_rect;            // print window
+    game_lives_area.flags     = SP1_PSSFLAG_INVALIDATE;     // printed characters invalidated so that they are drawn in the next sp1_UpdateNow
+    game_lives_area.attr_mask = 0;                          // overwrite background colour
+    game_lives_area.attr      = INK_WHITE | PAPER_BLACK;
+    game_lives_area.visit     = 0;
 
     game_level_area.bounds    = &game_level_rect;            // print window
     game_level_area.flags     = SP1_PSSFLAG_INVALIDATE;     // printed characters invalidated so that they are drawn in the next sp1_UpdateNow
@@ -129,7 +129,7 @@ void show_menu() {
   sp1_PrintString(&game_menu_area, "\x14\x47" "WWW.Z88DK.ORG");
 
   sp1_SetPrintPos(&game_menu_area, 18, 3);
-  sp1_PrintString(&game_menu_area, "\x14\x47" "LEFT:Z   RIGHT:M");
+  sp1_PrintString(&game_menu_area, "\x14\x47" "LEFT:O   RIGHT:P");
   sp1_SetPrintPos(&game_menu_area, 20, 4);
   sp1_PrintString(&game_menu_area, "\x14\x47" "PRESS ANY KEY!");
   sp1_UpdateNow();

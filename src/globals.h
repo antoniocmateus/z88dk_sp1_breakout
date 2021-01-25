@@ -9,8 +9,8 @@ extern struct sp1_Rect game_text_rect; // Y, X, W, H
 extern struct sp1_pss game_text_area;
 extern struct sp1_Rect game_score_rect;
 extern struct sp1_pss game_score_area;
-extern struct sp1_Rect game_lifes_rect;
-extern struct sp1_pss game_lifes_area;
+extern struct sp1_Rect game_lives_rect;
+extern struct sp1_pss game_lives_area;
 extern struct sp1_Rect game_level_rect;
 extern struct sp1_pss game_level_area;
 extern struct sp1_Rect game_menu_rect;
@@ -36,7 +36,7 @@ extern struct keys_struct game_keys;        // defines the input keys
 #define PAD_START_POS_X  88                 // pad starting x position
 #define PAD_START_POS_Y  168                // pad starting y position
 
-extern uint8_t lifes;                       // hold the number of lifes
+extern uint8_t lives;                       // hold the number of lives
 extern uint8_t level;                       // hold the current level
 extern uint16_t score;                      // score
 extern uint8_t bullet_cooldown;            // cooldown for the shooting
