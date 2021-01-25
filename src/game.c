@@ -17,10 +17,10 @@
 // hi-score
 
 
-uint8_t lifes;
+uint8_t lives;
 uint8_t level;
 uint16_t score;
-unsigned char info_buffer[6]; // for printing the score, lifes, levels with padded numbers
+unsigned char info_buffer[6]; // for printing the score, lives, levels with padded numbers
 uint8_t bullet_cooldown;
 uint8_t levelstart_cooldown;
 uint8_t in_game;
@@ -49,7 +49,7 @@ void init_graphics() {
 // Initialize all variables
 void init_gameplay() {
 
-    lifes = 4;
+    lives = 4;
     level = 0;
     score = 0;
     bullet_cooldown = 0;
@@ -161,12 +161,12 @@ void update_score(uint16_t value) {
     sp1_PrintString(&game_score_area, info_buffer);
 }
 
-// Update the lifes text
-void update_lifes() {
+// Update the lives text
+void update_lives() {
     
-    pad_numbers(info_buffer, 2, lifes);
-    sp1_SetPrintPos(&game_lifes_area, 0, 0);
-    sp1_PrintString(&game_lifes_area, info_buffer);
+    pad_numbers(info_buffer, 2, lives);
+    sp1_SetPrintPos(&game_lives_area, 0, 0);
+    sp1_PrintString(&game_lives_area, info_buffer);
 }
 
 // Update the level text
@@ -234,7 +234,7 @@ void play_game() {
     
     // write initial text information
     update_score(score);
-    update_lifes();
+    update_lives();
     update_level();
 
     wait();
@@ -271,10 +271,10 @@ void play_game() {
             } else {
                 // Lost a life
 
-                lifes-=1;
-                update_lifes();
+                lives-=1;
+                update_lives();
                 move_sprites_outside(); // animate pad perhaps?
-                if(lifes > 0) { // just a life lost
+                if(lives > 0) { // just a life lost
                     show_message(life_lost, 0, 3, 5);
 
                     restart_level();
