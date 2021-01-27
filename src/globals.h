@@ -32,7 +32,7 @@ extern struct keys_struct game_keys;        // defines the input keys
 #define MAX_SCR_LEFT     8                  // pixel limit on the left side of the screen
 #define MAX_SCR_RIGHT    184                // pixel limit on the right side of the screen
 #define MAX_SCR_TOP      9                  // pixel limit on the top side of the screen
-#define MAX_SCR_BOTTOM   191                // pixel limit on the right side of the screen
+#define MAX_SCR_BOTTOM   191                // pixel limit on the bottom side of the screen
 #define PAD_START_POS_X  88                 // pad starting x position
 #define PAD_START_POS_Y  168                // pad starting y position
 
